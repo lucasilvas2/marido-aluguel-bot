@@ -1,0 +1,25 @@
+### WhatsApp Connection API - Test Requests
+
+### 1. Check WhatsApp Status
+GET http://localhost:3000/whatsapp/status
+Content-Type: application/json
+
+###
+
+### 2. Get QR Code for WhatsApp Authentication
+GET http://localhost:3000/whatsapp/qrcode
+Content-Type: application/json
+
+###
+
+### 3. Disconnect WhatsApp
+POST http://localhost:3000/whatsapp/disconnect
+Content-Type: application/json
+
+###
+
+### 4. Restart WhatsApp Connection
+POST http://localhost:3000/whatsapp/restart
+Content-Type: application/json
+
+###
