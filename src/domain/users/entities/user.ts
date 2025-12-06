@@ -1,13 +1,13 @@
-import { Address } from "cluster";
+import { Address } from "../../addresses/entities/address";
 
 export class User {
-    id: string;
+    id: number;
     name: string;
     whatsappNumber: string;
     userType: number;
     address?: Address;
 
-    constructor(id: string, name: string, whatsappNumber: string, userType: number, address?: Address) {
+    constructor(id: number, name: string, whatsappNumber: string, userType: number, address?: Address) {
         this.setId(id);
         this.setName(name);
         this.setWhatsappNumber(whatsappNumber);
@@ -17,11 +17,11 @@ export class User {
         }
     }
 
-    getId(): string {
+    getId(): number {
         return this.id;
     }
 
-    setId(id: string): void {
+    setId(id: number): void {
         this.id = id;
     }
 

@@ -20,7 +20,7 @@ export class UserRepository implements UsersRepositoryInterface, OnModuleDestroy
     return this.prisma.user.create({ data });
   }
 
-  async findById(id: string): Promise<any | null> {
+  async findById(id: number): Promise<any | null> {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
@@ -28,11 +28,11 @@ export class UserRepository implements UsersRepositoryInterface, OnModuleDestroy
     return this.prisma.user.findMany();
   }
 
-  async update(id: string, data: Partial<{ name: string; email: string; phone: string }>): Promise<any> {
+  async update(id: number, data: Partial<{ name: string; email: string; phone: string }>): Promise<any> {
     return this.prisma.user.update({ where: { id }, data });
   }
 
-  async delete(id: string): Promise<any> {
+  async delete(id: number): Promise<any> {
     return this.prisma.user.delete({ where: { id } });
   }
 }

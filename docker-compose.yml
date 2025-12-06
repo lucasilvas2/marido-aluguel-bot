@@ -1,9 +1,10 @@
-# mysql last version
+# mysql version 8
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: marido_aluguel_mysql
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: marido_aluguel

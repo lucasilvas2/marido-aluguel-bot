@@ -1,12 +1,12 @@
 export class Address {
-    id: string;
+    id: number;
     street: string;
     city: string;
     zipCode: string;
     country: string;
     number?: string;
 
-    constructor(id: string, street: string, city: string, zipCode: string, country: string) {
+    constructor(id: number, street: string, city: string, zipCode: string, country: string) {
         this.setId(id);
         this.setStreet(street);
         this.setCity(city);
@@ -14,11 +14,11 @@ export class Address {
         this.setCountry(country);
     }
 
-    getId(): string {
+    getId(): number {
         return this.id;
     }
     
-    setId(id: string): void {
+    setId(id: number): void {
         this.id = id;
     }
 
