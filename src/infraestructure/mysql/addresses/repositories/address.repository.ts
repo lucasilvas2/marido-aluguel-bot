@@ -16,11 +16,11 @@ export class AddressRepository implements AddressesRepositoryInterface, OnModule
     }
   }
 
-  async create(data: { street: string; city: string; zipCode: string; country: string; number?: string; state: string; neighborhood: string; userId: string }): Promise<any> {
+  async create(data: { street: string; city: string; zipCode: string; country: string; number?: string; state: string; neighborhood: string; userId: number }): Promise<any> {
     return this.prisma.address.create({ data });
   }
 
-  async findById(id: string): Promise<any | null> {
+  async findById(id: number): Promise<any | null> {
     return this.prisma.address.findUnique({ where: { id } });
   }
 
@@ -28,11 +28,11 @@ export class AddressRepository implements AddressesRepositoryInterface, OnModule
     return this.prisma.address.findMany();
   }
 
-  async update(id: string, data: Partial<{ street: string; city: string; zipCode: string; country: string; number?: string }>): Promise<any> {
+  async update(id: number, data: Partial<{ street: string; city: string; zipCode: string; country: string; number?: string }>): Promise<any> {
     return this.prisma.address.update({ where: { id }, data });
   }
 
-  async delete(id: string): Promise<any> {
+  async delete(id: number): Promise<any> {
     return this.prisma.address.delete({ where: { id } });
   }
 }

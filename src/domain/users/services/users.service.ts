@@ -11,11 +11,11 @@ export class UsersService implements UsersServiceInterface {
         return this.userRepository.create(data);
     }
 
-    async findUserById(id: string): Promise<User | null> {
+    async findUserById(id: number): Promise<User | null> {
         return this.findById(id);
     }
 
-    findById(id: string): Promise<User | null> {
+    findById(id: number): Promise<User | null> {
         return this.userRepository.findById(id);
     }
 
@@ -23,11 +23,11 @@ export class UsersService implements UsersServiceInterface {
         return this.userRepository.findAll();
     }
 
-    update(id: string, data: Partial<{ name: string; email: string; phone: string }>): Promise<User> {
+    update(id: number, data: Partial<{ name: string; email: string; phone: string }>): Promise<User> {
         return this.userRepository.update(id, data);
     }
 
-    delete(id: string): Promise<User> {
+    delete(id: number): Promise<User> {
         return this.userRepository.delete(id);
     }
 }

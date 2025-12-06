@@ -8,7 +8,18 @@ import { ConversationStateService } from '../application/services/conversation-s
 
 @Module({
     imports: [PrismaModule, MysqlModule, WhatsappWebModule],
-    providers: [UserRegistrationService, MessageProcessingService, ConversationStateService],
-    exports: [PrismaModule, MysqlModule, WhatsappWebModule, UserRegistrationService, MessageProcessingService, ConversationStateService],
+    providers: [
+        UserRegistrationService, 
+        MessageProcessingService, 
+        ConversationStateService
+    ],
+    exports: [
+        PrismaModule, 
+        MysqlModule, 
+        WhatsappWebModule, 
+        UserRegistrationService, 
+        MessageProcessingService, 
+        ConversationStateService
+    ],
 })
 export class InfraestructureModule {}
