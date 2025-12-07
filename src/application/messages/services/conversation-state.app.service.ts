@@ -7,7 +7,7 @@ interface ConversationState {
 }
 
 @Injectable()
-export class ConversationStateService {
+export class ConversationStateAppService {
   private states: Map<string, ConversationState> = new Map();
 
   setState(userId: string, state: string, data?: any): void {

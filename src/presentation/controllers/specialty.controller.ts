@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { ApiBody } from "@nestjs/swagger";
-import { SpecialtiesAppServiceInterface } from "src/application/services/interfaces/specialties.app.service.interface";
+import { SpecialtiesAppServiceInterface } from "src/application/specialties/interfaces/specialties.app.service.interface";
 
 @Controller('specialties')
 export class SpecialtyController {

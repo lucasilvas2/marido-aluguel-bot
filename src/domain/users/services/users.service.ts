@@ -23,6 +23,10 @@ export class UsersService implements UsersServiceInterface {
         return this.userRepository.findAll();
     }
 
+    findByPhone(phone: string): Promise<User | null> {
+        return this.userRepository.findByPhone(phone);
+    }
+
     update(id: number, data: Partial<{ name: string; email: string; phone: string }>): Promise<User> {
         return this.userRepository.update(id, data);
     }

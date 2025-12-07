@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRegistrationService } from '../src/application/services/user-registration.service';
+import { UserRegistrationService } from '../src/application/users/services/user-registration.service';
 import { UsersService } from 'src/domain/users/services/users.service';
 import { AddressesService } from 'src/domain/addresses/services/addresses.service';
 import { UsersServiceInterface } from 'src/domain/users/services/users.service.interface';

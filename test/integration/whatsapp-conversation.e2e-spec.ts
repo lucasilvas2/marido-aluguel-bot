@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/app.module';
-import { MessageProcessingService } from '../../src/application/services/message-processing.service';
-import { ConversationStateService } from '../../src/application/services/conversation-state.service';
+import { MessageProcessingService } from '../../src/application/messages/services/message-processing.app.service';
+import { ConversationStateService } from '../../src/application/messages/services/conversation-state.app.service';
 import { WhatsappWebService } from '../../src/infraestructure/whatsappWeb/whatsappWeb.service';
 
 /**

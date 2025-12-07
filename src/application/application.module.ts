@@ -1,11 +1,12 @@
 import { Module, Provider } from '@nestjs/common';
 import { DomainModule } from '../domain/domain.module';
-import { UserRegistrationService } from './services/user-registration.service';
-import { ConversationStateService } from './services/conversation-state.service';
-import { MessageProcessingService } from './services/message-processing.service';
+import { UserRegistrationService } from './users/services/user-registration.service';
+import { ConversationStateAppService } from './messages/services/conversation-state.app.service';
+import { MessageProcessingAppService } from './messages/services/message-processing.app.service';
 import { InfraestructureModule } from '../infraestructure/infraestructure.module';
-import { SpecialtiesAppService } from './services/specialties.app.service';
-import { SpecialtiesAppServiceInterface } from './services/interfaces/specialties.app.service.interface';
+import { SpecialtiesAppService } from './specialties/specialties.app.service';
+import { SpecialtiesAppServiceInterface } from './specialties/interfaces/specialties.app.service.interface';
+import { UserSpecialtyRegistrationService } from './specialties/services/user-specialty-registration.service';
 
 const services: Provider[] = [
   {
@@ -18,14 +19,16 @@ const services: Provider[] = [
   imports: [DomainModule, InfraestructureModule],
   providers: [
     UserRegistrationService,
-    ConversationStateService,
-    MessageProcessingService,
+    UserSpecialtyRegistrationService,
+    ConversationStateAppService,
+    MessageProcessingAppService,
     ...services,
   ],
   exports: [
     UserRegistrationService,
-    ConversationStateService,
-    MessageProcessingService,
+    UserSpecialtyRegistrationService,
+    ConversationStateAppService,
+    MessageProcessingAppService,
     SpecialtiesAppServiceInterface
   ],
 })
