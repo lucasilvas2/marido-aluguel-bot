@@ -38,4 +38,11 @@ export class UserSpecialtyRegistrationService {
   async getUserSpecialties(userId: number): Promise<UserSpecialty[]> {
     return await this.userSpecialtiesService.findByUserId(userId);
   }
+
+  async listUnregisteredSpecialties(userId: number): Promise<Specialty[]> {
+    const registeredSpecialties = await this.getUserSpecialties(userId);
+    const registeredSpecialtyIds = registeredSpecialties.map(us => us.getSpecialtyId());
+    const allSpecialties = await this.listAvailableSpecialties();
+    return allSpecialties.filter(s => !registeredSpecialtyIds.includes(s.getId()));
+  }
 }
