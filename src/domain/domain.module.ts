@@ -8,6 +8,8 @@ import { SpecialtiesService } from "./specialties/services/specialties.service";
 import { SpecialtiesServiceInterface } from "./specialties/services/specialties.service.interface";
 import { UserSpecialtiesService } from "./specialties/services/user-specialties.service";
 import { UserSpecialtiesServiceInterface } from "./specialties/services/user-specialties.service.interface";
+import { ServiceRequestsServiceInterface } from "./service-requests/services/service-requests.service.interface";
+import { ServiceRequestsService } from "./service-requests/services/service-requests.service";
 
 const services: Provider[] = [
     {
@@ -25,6 +27,10 @@ const services: Provider[] = [
     {
         provide: SpecialtiesServiceInterface,
         useClass: SpecialtiesService
+    },
+    {
+        provide: ServiceRequestsServiceInterface,
+        useClass: ServiceRequestsService
     }
 ];
 
@@ -36,7 +42,8 @@ const services: Provider[] = [
         UsersServiceInterface,
         AddressesServiceInterface,
         UserSpecialtiesServiceInterface,
-        SpecialtiesServiceInterface
+        SpecialtiesServiceInterface,
+        ServiceRequestsServiceInterface
     ],
 })
 export class DomainModule {}

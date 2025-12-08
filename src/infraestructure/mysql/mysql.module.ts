@@ -7,6 +7,8 @@ import { SpecialtiesRepositoryInterface } from "src/domain/specialties/repositor
 import { SpecialtyRepository } from "./specialties/repositories/specialty.repository";
 import { UserSpecialtiesRepositoryInterface } from "src/domain/specialties/repositories/user-specialties.repository.interface";
 import { UserSpecialtyRepository } from "./specialties/repositories/user-specialty.repository";
+import { ServiceRequestsRepositoryInterface } from "src/domain/service-requests/repositories/service-requests.repository.interface";
+import { ServiceRequestRepository } from "./service-requests/repositories/service-request.repository";
 @Module({
     imports: [],
     providers: [
@@ -14,7 +16,14 @@ import { UserSpecialtyRepository } from "./specialties/repositories/user-special
         { provide: UsersRepositoryInterface, useClass: UserRepository },
         { provide: UserSpecialtiesRepositoryInterface, useClass: UserSpecialtyRepository },
         { provide: SpecialtiesRepositoryInterface, useClass: SpecialtyRepository },
+        { provide: ServiceRequestsRepositoryInterface, useClass: ServiceRequestRepository },
     ],
-    exports: [AddressesRepositoryInterface, UsersRepositoryInterface, UserSpecialtiesRepositoryInterface, SpecialtiesRepositoryInterface],
+    exports: [
+        AddressesRepositoryInterface, 
+        UsersRepositoryInterface, 
+        UserSpecialtiesRepositoryInterface, 
+        SpecialtiesRepositoryInterface, 
+        ServiceRequestsRepositoryInterface
+    ],
 })
 export class MysqlModule {}

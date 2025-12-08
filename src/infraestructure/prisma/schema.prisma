@@ -21,8 +21,11 @@ model User {
   userType        String           @default("CLIENT") // CLIENT or PROFESSIONAL
   addresses       Address[]
   userSpecialties UserSpecialty[]
+  clientRequests  ServiceRequest[] @relation("ClientRequests")
+  professionalRequests ServiceRequest[] @relation("ProfessionalRequests")
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+
 }
 
 model Address {
@@ -45,6 +48,7 @@ model Specialty {
   name            String           @unique
   description     String
   userSpecialties UserSpecialty[]
+  serviceRequests ServiceRequest[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }
@@ -62,4 +66,28 @@ model UserSpecialty {
   updatedAt   DateTime  @updatedAt
 
   @@id([userId, specialtyId])
+}
+
+model ServiceRequest {
+  id              Int       @id @default(autoincrement())
+  clientId        Int
+  professionalId  Int?      // nullable pois pode não ter profissional atribuído ainda
+  specialtyId     Int
+  status          String    @default("PENDING") // PENDING, ACCEPTED, IN_PROGRESS, COMPLETED, CANCELLED
+  description     String?
+  notes           String? 
+  requestedDate   DateTime?
+  completedDate   DateTime?
+  
+  client          User      @relation("ClientRequests", fields: [clientId], references: [id])
+  professional    User?     @relation("ProfessionalRequests", fields: [professionalId], references: [id])
+  specialty       Specialty @relation(fields: [specialtyId], references: [id])
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([clientId])
+  @@index([professionalId])
+  @@index([specialtyId])
+  @@index([status])
 }
