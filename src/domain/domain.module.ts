@@ -4,8 +4,6 @@ import { UsersServiceInterface } from "./users/services/users.service.interface"
 import { UsersService } from "./users/services/users.service";
 import { AddressesServiceInterface } from "./addresses/services/addresses.service.interface";
 import { AddressesService } from "./addresses/services/addresses.service";
-import { UserSpecialtiesRepositoryInterface } from "./specialties/repositories/user-specialties.repository.interface";
-import { SpecialtiesRepositoryInterface } from "./specialties/repositories/specialties.repository.interface";
 import { SpecialtiesService } from "./specialties/services/specialties.service";
 import { SpecialtiesServiceInterface } from "./specialties/services/specialties.service.interface";
 import { UserSpecialtiesService } from "./specialties/services/user-specialties.service";

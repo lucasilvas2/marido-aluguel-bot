@@ -6,4 +6,5 @@ export abstract class UsersServiceInterface {
     abstract findAll(): Promise<User[]>;
     abstract update(id: number, data: Partial<{ name: string; email: string; phone: string }>): Promise<User>;
     abstract delete(id: number): Promise<User>;
+    abstract findByPhone(phone: string): Promise<User | null>;
 }

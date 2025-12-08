@@ -1,11 +1,42 @@
 import { Module, Provider } from '@nestjs/common';
 import { DomainModule } from '../domain/domain.module';
-import { UserRegistrationService } from './services/user-registration.service';
-import { ConversationStateService } from './services/conversation-state.service';
-import { MessageProcessingService } from './services/message-processing.service';
+import { UserRegistrationService } from './users/services/user-registration.service';
+import { ConversationStateAppService } from './messages/services/conversation-state.app.service';
+import { MessageProcessingAppService } from './messages/services/message-processing.app.service';
 import { InfraestructureModule } from '../infraestructure/infraestructure.module';
-import { SpecialtiesAppService } from './services/specialties.app.service';
-import { SpecialtiesAppServiceInterface } from './services/interfaces/specialties.app.service.interface';
+import { SpecialtiesAppService } from './specialties/specialties.app.service';
+import { SpecialtiesAppServiceInterface } from './specialties/interfaces/specialties.app.service.interface';
+import { UserSpecialtyRegistrationService } from './specialties/services/user-specialty-registration.service';
+
+// Event-Driven Architecture
+import { EventsModule } from './events/events.module';
+
+// Validadores
+import { EmailValidator } from './messages/services/validators/email.validator';
+import { PostalCodeValidator } from './messages/services/validators/postal-code.validator';
+import { StateValidator } from './messages/services/validators/state.validator';
+// NumberValidator não é provider - usa factory methods estáticos
+import { PhoneValidator } from './messages/services/validators/phone.validator';
+
+// Formatadores
+import { MenuMessageFormatter } from './messages/services/formatters/menu-message.formatter';
+import { ProfileMessageFormatter } from './messages/services/formatters/profile-message.formatter';
+import { RegistrationMessageFormatter } from './messages/services/formatters/registration-message.formatter';
+import { SpecialtyMessageFormatter } from './messages/services/formatters/specialty-message.formatter';
+
+// Handlers
+import {
+  MenuCommandHandler,
+  ProfileDisplayHandler,
+  WelcomeMessageHandler,
+  InitiateSpecialtyHandler,
+  UserRegistrationFlowHandler,
+  SpecialtyRegistrationFlowHandler,
+  FallbackMessageHandler,
+} from './messages/services/handlers';
+
+// Router
+import { MessageRouter } from './messages/services/routers/message-router.service';
 
 const services: Provider[] = [
   {
@@ -14,19 +45,56 @@ const services: Provider[] = [
   }
 ];
 
+const validators: Provider[] = [
+  EmailValidator,
+  PostalCodeValidator,
+  StateValidator,
+  PhoneValidator,
+  // NumberValidator não é provider - usa factory methods estáticos
+];
+
+const formatters: Provider[] = [
+  MenuMessageFormatter,
+  ProfileMessageFormatter,
+  RegistrationMessageFormatter,
+  SpecialtyMessageFormatter,
+];
+
+const handlers: Provider[] = [
+  MenuCommandHandler,
+  ProfileDisplayHandler,
+  WelcomeMessageHandler,
+  InitiateSpecialtyHandler,
+  UserRegistrationFlowHandler,
+  SpecialtyRegistrationFlowHandler,
+  FallbackMessageHandler,
+];
+
 @Module({
-  imports: [DomainModule, InfraestructureModule],
+  imports: [
+    DomainModule,
+    InfraestructureModule,
+    EventsModule, // Event-Driven Architecture
+  ],
   providers: [
     UserRegistrationService,
-    ConversationStateService,
-    MessageProcessingService,
+    UserSpecialtyRegistrationService,
+    ConversationStateAppService,
+    MessageProcessingAppService,
+    MessageRouter,
     ...services,
+    ...validators,
+    ...formatters,
+    ...handlers,
   ],
   exports: [
     UserRegistrationService,
-    ConversationStateService,
-    MessageProcessingService,
-    SpecialtiesAppServiceInterface
+    UserSpecialtyRegistrationService,
+    ConversationStateAppService,
+    MessageProcessingAppService,
+    MessageRouter,
+    SpecialtiesAppServiceInterface,
+    EventsModule,
   ],
 })
 export class ApplicationModule {}

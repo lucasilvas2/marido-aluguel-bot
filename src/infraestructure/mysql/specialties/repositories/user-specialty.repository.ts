@@ -1,6 +1,8 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { UserSpecialtiesRepositoryInterface } from 'src/domain/specialties/repositories/user-specialties.repository.interface';
+import { UserSpecialty } from 'src/domain/specialties/entities/user-specialty';
+import { Specialty } from 'src/domain/specialties/entities/specialty';
 
 @Injectable()
 export class UserSpecialtyRepository implements UserSpecialtiesRepositoryInterface ,OnModuleDestroy {
@@ -40,31 +42,56 @@ export class UserSpecialtyRepository implements UserSpecialtiesRepositoryInterfa
         });
     }
 
-    async findByUserIdAndSpecialtyId(userId: number, specialtyId: number): Promise<any | null> {
-        return this.prisma.userSpecialty.findUnique({
+    async findByUserIdAndSpecialtyId(userId: number, specialtyId: number): Promise<UserSpecialty | null> {
+        const userSpecialty = await this.prisma.userSpecialty.findUnique({
             where: {
                 userId_specialtyId: {
                     userId,
                     specialtyId,
                 },
             },
+            include: {
+                specialty: true,
+                user: true,
+            },
         });
+
+        return userSpecialty ? this.mapToEntity(userSpecialty) : null;
     }
 
-    async findByUserId(userId: number): Promise<any[]> {
-        return this.prisma.userSpecialty.findMany({
+    async findByUserId(userId: number): Promise<UserSpecialty[]> {
+        const userSpecialties = await this.prisma.userSpecialty.findMany({
             where: { userId },
-        }); 
-    }
-
-    async findBySpecialtyId(specialtyId: number): Promise<any[]> {
-        return this.prisma.userSpecialty.findMany({
-            where: { specialtyId },
+            include: {
+                specialty: true,
+                user: true,
+            },
         });
+        
+        return userSpecialties.map(us => this.mapToEntity(us));
     }
 
-    async findAll(): Promise<any[]> {
-        return this.prisma.userSpecialty.findMany();
+    async findBySpecialtyId(specialtyId: number): Promise<UserSpecialty[]> {
+        const userSpecialties = await this.prisma.userSpecialty.findMany({
+            where: { specialtyId },
+            include: {
+                specialty: true,
+                user: true,
+            },
+        });
+        
+        return userSpecialties.map(us => this.mapToEntity(us));
+    }
+
+    async findAll(): Promise<UserSpecialty[]> {
+        const userSpecialties = await this.prisma.userSpecialty.findMany({
+            include: {
+                specialty: true,
+                user: true,
+            },
+        });
+        
+        return userSpecialties.map(us => this.mapToEntity(us));
     }
 
     async deleteByUserId(userId: number): Promise<void> {
@@ -84,9 +111,40 @@ export class UserSpecialtyRepository implements UserSpecialtiesRepositoryInterfa
         });
     }
 
-    async getSpecialtiesByUserId(userId: number): Promise<any[]> {
-        return this.prisma.userSpecialty.findMany({
+    async getSpecialtiesByUserId(userId: number): Promise<UserSpecialty[]> {
+        const userSpecialties = await this.prisma.userSpecialty.findMany({
             where: { userId },
+            include: {
+                specialty: true,
+                user: true,
+            },
         });
+        
+        return userSpecialties.map(us => this.mapToEntity(us));
+    }
+
+    private mapToEntity(prismaUserSpecialty: any): UserSpecialty {
+        // Mapeia a especialidade
+        const specialty = new Specialty(
+            prismaUserSpecialty.specialty.id,
+            prismaUserSpecialty.specialty.name,
+            prismaUserSpecialty.specialty.description || undefined,
+            prismaUserSpecialty.specialty.createdAt,
+            prismaUserSpecialty.specialty.updatedAt
+        );
+
+        // Cria a entidade UserSpecialty
+        return new UserSpecialty(
+            prismaUserSpecialty.userId,
+            prismaUserSpecialty.specialtyId,
+            prismaUserSpecialty.user,
+            specialty,
+            prismaUserSpecialty.isCertified ?? false,
+            prismaUserSpecialty.createdAt,
+            prismaUserSpecialty.updatedAt,
+            prismaUserSpecialty.experienceYears ?? undefined,
+            prismaUserSpecialty.pricePerHour ?? undefined,
+            prismaUserSpecialty.notes ?? undefined
+        );
     }
 }

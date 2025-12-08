@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConversationStateService } from '../src/application/services/conversation-state.service';
+import { ConversationStateService } from '../src/application/messages/services/conversation-state.app.service';
 
 describe('ConversationStateService', () => {
   let service: ConversationStateService;
