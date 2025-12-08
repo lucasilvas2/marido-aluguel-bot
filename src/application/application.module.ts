@@ -4,7 +4,7 @@ import { UserRegistrationService } from './users/services/user-registration.serv
 import { ConversationStateAppService } from './messages/services/conversation-state.app.service';
 import { MessageProcessingAppService } from './messages/services/message-processing.app.service';
 import { InfraestructureModule } from '../infraestructure/infraestructure.module';
-import { SpecialtiesAppService } from './specialties/specialties.app.service';
+import { SpecialtiesAppService } from './specialties/services/specialties.app.service';
 import { SpecialtiesAppServiceInterface } from './specialties/interfaces/specialties.app.service.interface';
 import { UserSpecialtyRegistrationService } from './specialties/services/user-specialty-registration.service';
 

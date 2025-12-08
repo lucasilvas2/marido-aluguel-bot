@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { SpecialtiesAppServiceInterface } from "./interfaces/specialties.app.service.interface";
+import { SpecialtiesAppServiceInterface } from "../interfaces/specialties.app.service.interface";
 import { SpecialtiesServiceInterface } from "src/domain/specialties/services/specialties.service.interface";
 import { Specialty } from "src/domain/specialties/entities/specialty";
 

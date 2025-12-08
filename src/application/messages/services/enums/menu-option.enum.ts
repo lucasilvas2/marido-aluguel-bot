@@ -28,3 +28,11 @@ export enum UserRegistrationOption {
   CLIENTE = '1',
   PROFISSIONAL = '2',
 }
+
+export enum ServiceStatusOption {
+  PENDENTE = '1',
+  ACEITO = '2',
+  EM_ANDAMENTO = '3',
+  CONCLUIDO = '4',
+  CANCELADO = '5',
+}
