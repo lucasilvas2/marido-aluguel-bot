@@ -23,6 +23,45 @@ export class MessageProcessingAppService implements OnModuleInit {
   }
 
   /**
+   * Verifica se o número de telefone está na lista de números permitidos
+   * Em ambiente de desenvolvimento, se DEV_ALLOWED_NUMBERS estiver configurado,
+   * apenas os números na lista poderão interagir com o bot
+   * 
+   * @param phoneNumber Número de telefone sem o sufixo @c.us
+   * @returns true se o número é permitido ou se não há restrição configurada
+   */
+  private isPhoneNumberAllowed(phoneNumber: string): boolean {
+    const allowedNumbers = process.env.DEV_ALLOWED_NUMBERS;
+    
+    // Se não houver restrição configurada, permite todos
+    if (!allowedNumbers || allowedNumbers.trim() === '') {
+      return true;
+    }
+
+    // Converte a string CSV em array e remove espaços
+    const allowedList = allowedNumbers
+      .split(',')
+      .map(num => num.trim())
+      .filter(num => num.length > 0);
+
+    // Se a lista estiver vazia após o processamento, permite todos
+    if (allowedList.length === 0) {
+      return true;
+    }
+
+    // Verifica se o número está na lista
+    const isAllowed = allowedList.includes(phoneNumber);
+    
+    if (!isAllowed) {
+      this.logger.debug(
+        `Dev restriction active - Allowed numbers: [${allowedList.join(', ')}]`
+      );
+    }
+
+    return isAllowed;
+  }
+
+  /**
    * Inicia listener de mensagens do WhatsApp
    * Registra callback para processar cada mensagem recebida
    */
@@ -68,6 +107,12 @@ export class MessageProcessingAppService implements OnModuleInit {
     }
 
     const phoneNumber = (from || '').replace('@c.us', '');
+
+    // Verificação de limitação de números em desenvolvimento
+    if (!this.isPhoneNumberAllowed(phoneNumber)) {
+      this.logger.debug(`🚫 Number ${phoneNumber} not in allowed list - ignoring message`);
+      return;
+    }
 
     this.logger.log(`📨 Processing message from ${phoneNumber}: ${body}`);
 

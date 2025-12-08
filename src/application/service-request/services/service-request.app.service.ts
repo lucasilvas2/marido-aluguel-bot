@@ -1,46 +1,48 @@
 import { Injectable } from "@nestjs/common";
 import { ServiceRequestAppServiceInterface } from "../interfaces/service-request.app.service.interfaces";
+import { ServiceRequestsServiceInterface } from "src/domain/service-requests/services/service-requests.service.interface";
+import { ServiceRequest } from "src/domain/service-requests/entities/service-request";
 
 @Injectable()
 export class ServiceRequestAppService implements ServiceRequestAppServiceInterface{
 
     constructor(
-        protected readonly serviceRequest: ServiceRequestAppServiceInterface
+        protected readonly serviceRequestService: ServiceRequestsServiceInterface
     ) {}
 
-    async create(clientId: number, professionalId: number, specialtyId: number, status: string, description: string): Promise<void> {
-        return this.serviceRequest.create(clientId, professionalId, specialtyId, status, description);
+    async create(clientId: number, professionalId: number | null, specialtyId: number, status: string, description: string): Promise<ServiceRequest> {
+        return await this.serviceRequestService.create(clientId, professionalId, specialtyId, status, description);
     }
 
-    async findById(id: number): Promise<any> {
-        return this.serviceRequest.findById(id);
+    async findById(id: number): Promise<ServiceRequest | null> {
+        return await this.serviceRequestService.findById(id);
     }
 
-    async update(id: number, status: string, description: string): Promise<void> {
-        return this.serviceRequest.update(id, status, description);
+    async update(id: number, clientId: number, professionalId: number | null, specialtyId: number, status: string, description: string): Promise<ServiceRequest> {
+        return await this.serviceRequestService.update(id, clientId, professionalId, specialtyId, status, description);
     }
 
     async delete(id: number): Promise<void> {
-        return this.serviceRequest.delete(id);
+        await this.serviceRequestService.delete(id);
     }
 
-    async all(): Promise<any[]> {
-        return this.serviceRequest.all();
+    async all(): Promise<ServiceRequest[]> {
+        return await this.serviceRequestService.all();
     }
 
-    async findByClientId(clientId: number): Promise<any[]> {
-        return this.serviceRequest.findByClientId(clientId);
+    async findByClientId(clientId: number): Promise<ServiceRequest[]> {
+        return await this.serviceRequestService.findByClientId(clientId);
     }
 
-    async findByProfessionalId(professionalId: number): Promise<any[]> {
-        return this.serviceRequest.findByProfessionalId(professionalId);
+    async findByProfessionalId(professionalId: number): Promise<ServiceRequest[]> {
+        return await this.serviceRequestService.findByProfessionalId(professionalId);
     }
 
-    async findByStatus(status: string): Promise<any[]> {
-        return this.serviceRequest.findByStatus(status);
+    async findByStatus(status: string): Promise<ServiceRequest[]> {
+        return await this.serviceRequestService.findByStatus(status);
     }
 
-    async findBySpecialtyId(specialtyId: number): Promise<any[]> {
-        return this.serviceRequest.findBySpecialtyId(specialtyId);
+    async findBySpecialtyId(specialtyId: number): Promise<ServiceRequest[]> {
+        return await this.serviceRequestService.findBySpecialtyId(specialtyId);
     }
 }

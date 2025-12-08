@@ -6,9 +6,14 @@ import { IConversationHandler } from '../handlers/interfaces/conversation-handle
 import { MenuCommandHandler } from '../handlers/menu-command.handler';
 import { ProfileDisplayHandler } from '../handlers/profile-display.handler';
 import { WelcomeMessageHandler } from '../handlers/welcome-message.handler';
+import { InitiateRegistrationHandler } from '../handlers/initiate-registration.handler';
 import { InitiateSpecialtyHandler } from '../handlers/initiate-specialty.handler';
+import { InitiateServiceRequestHandler } from '../handlers/initiate-service-request.handler';
+import { ViewServiceRequestsHandler } from '../handlers/view-service-requests.handler';
 import { UserRegistrationFlowHandler } from '../handlers/user-registration-flow.handler';
 import { SpecialtyRegistrationFlowHandler } from '../handlers/specialty-registration-flow.handler';
+import { ServiceRequestRegistrationFlowHandler } from '../handlers/service-request-registration-flow.handler';
+import { ServiceRequestViewFlowHandler } from '../handlers/service-request-view-flow.handler';
 import { FallbackMessageHandler } from '../handlers/fallback-message.handler';
 
 /**
@@ -25,22 +30,32 @@ export class MessageRouter {
     private readonly menuHandler: MenuCommandHandler,
     private readonly profileHandler: ProfileDisplayHandler,
     private readonly welcomeHandler: WelcomeMessageHandler,
+    private readonly initiateRegistrationHandler: InitiateRegistrationHandler,
     private readonly initiateSpecialtyHandler: InitiateSpecialtyHandler,
+    private readonly initiateServiceRequestHandler: InitiateServiceRequestHandler,
+    private readonly viewServiceRequestsHandler: ViewServiceRequestsHandler,
     // Flow Handlers
     private readonly userRegistrationHandler: UserRegistrationFlowHandler,
     private readonly specialtyRegistrationHandler: SpecialtyRegistrationFlowHandler,
+    private readonly serviceRequestRegistrationHandler: ServiceRequestRegistrationFlowHandler,
+    private readonly serviceRequestViewFlowHandler: ServiceRequestViewFlowHandler,
     // Fallback
     private readonly fallbackHandler: FallbackMessageHandler,
   ) {
     this.handlers = [
-      // Comandos específicos
+      // Comandos específicos (alta prioridade)
       this.menuHandler,
       this.profileHandler,
+      this.initiateRegistrationHandler,
       this.initiateSpecialtyHandler,
+      this.initiateServiceRequestHandler,
+      this.viewServiceRequestsHandler,
       
       // Fluxos ativos (verificam estado)
       this.userRegistrationHandler,
       this.specialtyRegistrationHandler,
+      this.serviceRequestRegistrationHandler,
+      this.serviceRequestViewFlowHandler,
       
       // Welcome (saudações genéricas)
       this.welcomeHandler,

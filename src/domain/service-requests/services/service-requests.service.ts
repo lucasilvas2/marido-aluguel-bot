@@ -7,7 +7,7 @@ import { ServiceRequest } from "../entities/service-request";
 export class ServiceRequestsService implements ServiceRequestsServiceInterface {
     constructor(protected readonly serviceRequestRepository: ServiceRequestsRepositoryInterface) {}
 
-    async create(clientId: number, professionalId: number, specialtyId: number, status: string, description: string): Promise<ServiceRequest> {
+    async create(clientId: number, professionalId: number | null, specialtyId: number, status: string, description: string): Promise<ServiceRequest> {
         return await this.serviceRequestRepository.create(clientId, professionalId, specialtyId, status, description);
     }
 
@@ -16,7 +16,7 @@ export class ServiceRequestsService implements ServiceRequestsServiceInterface {
         return await this.serviceRequestRepository.findById(id);
     }
 
-    async update(id: number, clientId: number, professionalId: number, specialtyId: number, status: string, description: string): Promise<ServiceRequest> {
+    async update(id: number, clientId: number, professionalId: number | null, specialtyId: number, status: string, description: string): Promise<ServiceRequest> {
         return await this.serviceRequestRepository.update(id, clientId, professionalId, specialtyId, status, description);
     }
 

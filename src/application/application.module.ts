@@ -7,6 +7,8 @@ import { InfraestructureModule } from '../infraestructure/infraestructure.module
 import { SpecialtiesAppService } from './specialties/services/specialties.app.service';
 import { SpecialtiesAppServiceInterface } from './specialties/interfaces/specialties.app.service.interface';
 import { UserSpecialtyRegistrationService } from './specialties/services/user-specialty-registration.service';
+import { ServiceRequestAppService } from './service-request/services/service-request.app.service';
+import { ServiceRequestAppServiceInterface } from './service-request/interfaces/service-request.app.service.interfaces';
 
 // Event-Driven Architecture
 import { EventsModule } from './events/events.module';
@@ -23,15 +25,22 @@ import { MenuMessageFormatter } from './messages/services/formatters/menu-messag
 import { ProfileMessageFormatter } from './messages/services/formatters/profile-message.formatter';
 import { RegistrationMessageFormatter } from './messages/services/formatters/registration-message.formatter';
 import { SpecialtyMessageFormatter } from './messages/services/formatters/specialty-message.formatter';
+import { ServiceRequestRegistrationMessageFormatter } from './messages/services/formatters/service-request-registration-message.formatter';
+import { ServiceRequestViewMessageFormatter } from './messages/services/formatters/service-request-view-message.formatter';
 
 // Handlers
 import {
   MenuCommandHandler,
   ProfileDisplayHandler,
   WelcomeMessageHandler,
+  InitiateRegistrationHandler,
   InitiateSpecialtyHandler,
+  InitiateServiceRequestHandler,
+  ViewServiceRequestsHandler,
   UserRegistrationFlowHandler,
   SpecialtyRegistrationFlowHandler,
+  ServiceRequestRegistrationFlowHandler,
+  ServiceRequestViewFlowHandler,
   FallbackMessageHandler,
 } from './messages/services/handlers';
 
@@ -42,7 +51,11 @@ const services: Provider[] = [
   {
     provide: SpecialtiesAppServiceInterface,
     useClass: SpecialtiesAppService,
-  }
+  },
+  {
+    provide: ServiceRequestAppServiceInterface,
+    useClass: ServiceRequestAppService,
+  },
 ];
 
 const validators: Provider[] = [
@@ -58,15 +71,22 @@ const formatters: Provider[] = [
   ProfileMessageFormatter,
   RegistrationMessageFormatter,
   SpecialtyMessageFormatter,
+  ServiceRequestRegistrationMessageFormatter,
+  ServiceRequestViewMessageFormatter,
 ];
 
 const handlers: Provider[] = [
   MenuCommandHandler,
   ProfileDisplayHandler,
   WelcomeMessageHandler,
+  InitiateRegistrationHandler,
   InitiateSpecialtyHandler,
+  InitiateServiceRequestHandler,
+  ViewServiceRequestsHandler,
   UserRegistrationFlowHandler,
   SpecialtyRegistrationFlowHandler,
+  ServiceRequestRegistrationFlowHandler,
+  ServiceRequestViewFlowHandler,
   FallbackMessageHandler,
 ];
 

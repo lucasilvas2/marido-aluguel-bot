@@ -3,6 +3,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EventEmitterService } from './event-emitter.service';
 import { AuditListener } from './listeners/audit.listener';
 import { AnalyticsListener } from './listeners/analytics.listener';
+import { ServiceRequestNotificationListener } from './listeners/service-request-notification.listener';
+import { InfraestructureModule } from 'src/infraestructure/infraestructure.module';
+import { DomainModule } from 'src/domain/domain.module';
 
 @Module({
   imports: [
@@ -16,8 +19,15 @@ import { AnalyticsListener } from './listeners/analytics.listener';
       // Show event name in memory leak message when more than maximum amount of listeners is assigned
       verboseMemoryLeak: true,
     }),
+    InfraestructureModule,
+    DomainModule,
   ],
-  providers: [EventEmitterService, AuditListener, AnalyticsListener],
+  providers: [
+    EventEmitterService, 
+    AuditListener, 
+    AnalyticsListener,
+    ServiceRequestNotificationListener,
+  ],
   exports: [EventEmitterService],
 })
 export class EventsModule {}

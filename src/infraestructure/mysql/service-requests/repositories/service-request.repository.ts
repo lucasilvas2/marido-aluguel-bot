@@ -20,7 +20,7 @@ export class ServiceRequestRepository implements ServiceRequestsRepositoryInterf
 
     async create(
         clientId: number, 
-        professionalId: number, 
+        professionalId: number | null, 
         specialtyId: number, 
         status: string, 
         description: string
@@ -66,7 +66,7 @@ export class ServiceRequestRepository implements ServiceRequestsRepositoryInterf
     async update(
         id: number, 
         clientId: number,
-        professionalId: number,
+        professionalId: number | null,
         specialtyId: number,
         status: string,
         description: string
