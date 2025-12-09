@@ -187,7 +187,41 @@ export class ServiceRequestViewFlowHandler implements IConversationFlowHandler {
   ): Promise<ConversationStateDTO> {
     const selectedRequest = flowData.requests![requestNumber - 1];
 
-    const detailsMessage = this.formatter.formatServiceRequestDetails(selectedRequest);
+    // Se o serviço está PENDING e tem propostas, redirecionar para visualização de propostas
+    if (selectedRequest.status === ServiceRequestStatus.PENDING && 
+        selectedRequest.proposalCount && 
+        selectedRequest.proposalCount > 0) {
+      
+      this.logger.log(`Redirecting to proposals view for service request ${selectedRequest.id}`);
+      
+      // Mensagem informando sobre as propostas
+      const proposalsMessage = 
+        `🔔 *Propostas Recebidas!*\n\n` +
+        `Esta solicitação recebeu ${selectedRequest.proposalCount} proposta(s).\n\n` +
+        `Carregando perfis dos profissionais...`;
+      
+      await this.whatsappService.sendMessage(
+        `${message.phoneNumber}@c.us`,
+        proposalsMessage,
+      );
+
+      // Mudar estado para viewing_proposals
+      return {
+        userId: message.phoneNumber,
+        state: 'viewing_proposals',
+        data: {
+          serviceRequestId: selectedRequest.id,
+          specialtyName: selectedRequest.specialtyName,
+        },
+      };
+    }
+
+    // Caso contrário, mostrar detalhes normais
+    const detailsMessage = this.formatter.formatServiceRequestDetails(
+      selectedRequest,
+      requestNumber, // Passa a posição na lista
+    );
+    
     await this.whatsappService.sendMessage(
       `${message.phoneNumber}@c.us`,
       detailsMessage,
@@ -211,13 +245,25 @@ export class ServiceRequestViewFlowHandler implements IConversationFlowHandler {
     flowData: ViewServiceRequestFlowDataDTO,
   ): Promise<ConversationStateDTO> {
     const parts = message.body.split(' ');
-    const requestId = parseInt(parts[1]);
+    const requestNumber = parseInt(parts[1]);
 
-    const request = flowData.requests?.find((r) => r.id === requestId);
+    const request = flowData.requests?.[requestNumber - 1];
+
+    if (!request) {
+      await this.whatsappService.sendMessage(
+        `${message.phoneNumber}@c.us`,
+        '❌ Solicitação não encontrada.',
+      );
+      return {
+        userId: message.phoneNumber,
+        state: 'viewing_service_requests',
+        data: flowData,
+      };
+    }
 
     const confirmationMessage = this.formatter.formatCancelConfirmation(
-      requestId,
-      request!.specialtyName,
+      request.id,
+      request.specialtyName,
     );
 
     await this.whatsappService.sendMessage(
@@ -230,7 +276,7 @@ export class ServiceRequestViewFlowHandler implements IConversationFlowHandler {
       state: 'viewing_service_requests',
       data: {
         ...flowData,
-        selectedRequestId: requestId,
+        selectedRequestId: request.id,
         awaitingCancelConfirmation: true,
       },
     };

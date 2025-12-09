@@ -12,6 +12,7 @@ export interface ServiceRequestDisplayDTO {
   status: string;
   description: string;
   professionalName?: string;
+  proposalCount?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,6 +50,12 @@ export class ServiceRequestViewMessageFormatter {
       
       message += `${index + 1}. ${statusEmoji} *${request.specialtyName}*\n`;
       message += `   Status: ${statusLabel}\n`;
+      
+      // Mostrar contador de propostas se existir
+      if (request.proposalCount && request.proposalCount > 0) {
+        message += `   🔔 ${request.proposalCount} profissional(is) propuseram!\n`;
+      }
+      
       message += `   Descrição: ${this.truncateText(request.description, 60)}\n`;
       
       if (request.professionalName) {
@@ -67,7 +74,10 @@ export class ServiceRequestViewMessageFormatter {
   /**
    * Formata detalhes completos de uma solicitação
    */
-  formatServiceRequestDetails(request: ServiceRequestDisplayDTO): string {
+  formatServiceRequestDetails(
+    request: ServiceRequestDisplayDTO,
+    listPosition: number,
+  ): string {
     const statusLabel = this.getStatusLabel(request.status);
     const statusEmoji = this.getStatusEmoji(request.status);
 
@@ -89,7 +99,7 @@ export class ServiceRequestViewMessageFormatter {
     // Ações disponíveis baseadas no status
     if (request.status === 'PENDING') {
       message += `💡 *Ações disponíveis:*\n`;
-      message += `Digite *cancelar ${request.id}* para cancelar esta solicitação\n\n`;
+      message += `Digite *cancelar ${listPosition}* para cancelar esta solicitação\n\n`;
     }
 
     message += `Digite *${MenuOption.MENU}* para voltar ao menu.`;

@@ -14,18 +14,18 @@ datasource db {
 }
 
 model User {
-  id              Int              @id @default(autoincrement())
-  name            String
-  email           String           @unique
-  phone           String           @unique
-  userType        String           @default("CLIENT") // CLIENT or PROFESSIONAL
-  addresses       Address[]
-  userSpecialties UserSpecialty[]
-  clientRequests  ServiceRequest[] @relation("ClientRequests")
-  professionalRequests ServiceRequest[] @relation("ProfessionalRequests")
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-
+  id                   Int                      @id @default(autoincrement())
+  name                 String
+  email                String                   @unique
+  phone                String                   @unique
+  userType             String                   @default("CLIENT") // CLIENT or PROFESSIONAL
+  addresses            Address[]
+  userSpecialties      UserSpecialty[]
+  clientRequests       ServiceRequest[]         @relation("ClientRequests")
+  professionalRequests ServiceRequest[]         @relation("ProfessionalRequests")
+  proposals            ServiceRequestProposal[] @relation("ProfessionalProposals")
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
 }
 
 model Address {
@@ -54,40 +54,63 @@ model Specialty {
 }
 
 model UserSpecialty {
-  userId      Int
-  specialtyId Int
-  user        User      @relation(fields: [userId], references: [id])
-  specialty   Specialty @relation(fields: [specialtyId], references: [id])
-  isCertified Boolean  @default(false)
+  userId          Int
+  specialtyId     Int
+  user            User      @relation(fields: [userId], references: [id])
+  specialty       Specialty @relation(fields: [specialtyId], references: [id])
+  isCertified     Boolean   @default(false)
   experienceYears Int?
-  pricePerHour  Float?
-  notes        String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  pricePerHour    Float?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@id([userId, specialtyId])
 }
 
 model ServiceRequest {
-  id              Int       @id @default(autoincrement())
-  clientId        Int
-  professionalId  Int?      // nullable pois pode não ter profissional atribuído ainda
-  specialtyId     Int
-  status          String    @default("PENDING") // PENDING, ACCEPTED, IN_PROGRESS, COMPLETED, CANCELLED
-  description     String?
-  notes           String? 
-  requestedDate   DateTime?
-  completedDate   DateTime?
-  
-  client          User      @relation("ClientRequests", fields: [clientId], references: [id])
-  professional    User?     @relation("ProfessionalRequests", fields: [professionalId], references: [id])
-  specialty       Specialty @relation(fields: [specialtyId], references: [id])
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  
+  id             Int       @id @default(autoincrement())
+  clientId       Int
+  professionalId Int? // nullable pois pode não ter profissional atribuído ainda
+  specialtyId    Int
+  status         String    @default("PENDING") // PENDING, ACCEPTED, IN_PROGRESS, COMPLETED, CANCELLED
+  description    String?
+  notes          String?
+  requestedDate  DateTime?
+  completedDate  DateTime?
+
+  client       User                     @relation("ClientRequests", fields: [clientId], references: [id])
+  professional User?                    @relation("ProfessionalRequests", fields: [professionalId], references: [id])
+  specialty    Specialty                @relation(fields: [specialtyId], references: [id])
+  proposals    ServiceRequestProposal[] @relation("ServiceRequestProposals")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([clientId])
   @@index([professionalId])
   @@index([specialtyId])
   @@index([status])
+}
+
+model ServiceRequestProposal {
+  id               Int       @id @default(autoincrement())
+  serviceRequestId Int
+  professionalId   Int
+  status           String    @default("PENDING") // PENDING, ACCEPTED, REJECTED, WITHDRAWN
+  proposalMessage  String?   @db.Text
+  proposedAt       DateTime  @default(now())
+  respondedAt      DateTime?
+
+  serviceRequest ServiceRequest @relation("ServiceRequestProposals", fields: [serviceRequestId], references: [id], onDelete: Cascade)
+  professional   User           @relation("ProfessionalProposals", fields: [professionalId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([serviceRequestId, professionalId])
+  @@index([serviceRequestId])
+  @@index([professionalId])
+  @@index([status])
+  @@map("ServiceRequestProposal")
 }

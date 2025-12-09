@@ -9,6 +9,8 @@ import { SpecialtiesAppServiceInterface } from './specialties/interfaces/special
 import { UserSpecialtyRegistrationService } from './specialties/services/user-specialty-registration.service';
 import { ServiceRequestAppService } from './service-request/services/service-request.app.service';
 import { ServiceRequestAppServiceInterface } from './service-request/interfaces/service-request.app.service.interfaces';
+import { ServiceRequestProposalAppService } from './service-request/services/service-request-proposal.app.service';
+import { ServiceRequestProposalAppServiceInterface } from './service-request/interfaces/service-request-proposal.app.service.interface';
 
 // Event-Driven Architecture
 import { EventsModule } from './events/events.module';
@@ -27,6 +29,8 @@ import { RegistrationMessageFormatter } from './messages/services/formatters/reg
 import { SpecialtyMessageFormatter } from './messages/services/formatters/specialty-message.formatter';
 import { ServiceRequestRegistrationMessageFormatter } from './messages/services/formatters/service-request-registration-message.formatter';
 import { ServiceRequestViewMessageFormatter } from './messages/services/formatters/service-request-view-message.formatter';
+import { ProfessionalServiceRequestFormatter } from './messages/services/formatters/professional-service-request.formatter';
+import { ClientProposalMessageFormatter } from './messages/services/formatters/client-proposal-message.formatter';
 
 // Handlers
 import {
@@ -37,12 +41,17 @@ import {
   InitiateSpecialtyHandler,
   InitiateServiceRequestHandler,
   ViewServiceRequestsHandler,
+  ViewAvailableServiceRequestsHandler,
+  ViewAcceptedServiceRequestsHandler,
   UserRegistrationFlowHandler,
   SpecialtyRegistrationFlowHandler,
   ServiceRequestRegistrationFlowHandler,
   ServiceRequestViewFlowHandler,
+  AvailableServiceRequestsFlowHandler,
+  AcceptedServiceRequestsFlowHandler,
   FallbackMessageHandler,
 } from './messages/services/handlers';
+import { ClientProposalViewFlowHandler } from './messages/services/handlers/client-proposal-view-flow.handler';
 
 // Router
 import { MessageRouter } from './messages/services/routers/message-router.service';
@@ -55,6 +64,10 @@ const services: Provider[] = [
   {
     provide: ServiceRequestAppServiceInterface,
     useClass: ServiceRequestAppService,
+  },
+  {
+    provide: ServiceRequestProposalAppServiceInterface,
+    useClass: ServiceRequestProposalAppService,
   },
 ];
 
@@ -73,6 +86,8 @@ const formatters: Provider[] = [
   SpecialtyMessageFormatter,
   ServiceRequestRegistrationMessageFormatter,
   ServiceRequestViewMessageFormatter,
+  ProfessionalServiceRequestFormatter,
+  ClientProposalMessageFormatter,
 ];
 
 const handlers: Provider[] = [
@@ -83,10 +98,15 @@ const handlers: Provider[] = [
   InitiateSpecialtyHandler,
   InitiateServiceRequestHandler,
   ViewServiceRequestsHandler,
+  ViewAvailableServiceRequestsHandler,
+  ViewAcceptedServiceRequestsHandler,
   UserRegistrationFlowHandler,
   SpecialtyRegistrationFlowHandler,
   ServiceRequestRegistrationFlowHandler,
   ServiceRequestViewFlowHandler,
+  AvailableServiceRequestsFlowHandler,
+  AcceptedServiceRequestsFlowHandler,
+  ClientProposalViewFlowHandler,
   FallbackMessageHandler,
 ];
 

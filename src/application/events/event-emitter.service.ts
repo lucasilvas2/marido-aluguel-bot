@@ -25,9 +25,6 @@ export class EventEmitterService {
       // Emite o evento específico
       this.eventEmitter.emit(event.eventType, event);
 
-      // Também emite no canal genérico para listeners que processam todos os eventos
-      this.eventEmitter.emit('**', event);
-
       this.logger.verbose(`Event ${event.eventType} [${event.eventId}] emitted successfully`);
     } catch (error) {
       this.logger.error(

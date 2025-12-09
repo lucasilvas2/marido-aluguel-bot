@@ -10,10 +10,14 @@ import { InitiateRegistrationHandler } from '../handlers/initiate-registration.h
 import { InitiateSpecialtyHandler } from '../handlers/initiate-specialty.handler';
 import { InitiateServiceRequestHandler } from '../handlers/initiate-service-request.handler';
 import { ViewServiceRequestsHandler } from '../handlers/view-service-requests.handler';
+import { ViewAvailableServiceRequestsHandler } from '../handlers/view-available-service-requests.handler';
+import { ViewAcceptedServiceRequestsHandler } from '../handlers/view-accepted-service-requests.handler';
 import { UserRegistrationFlowHandler } from '../handlers/user-registration-flow.handler';
 import { SpecialtyRegistrationFlowHandler } from '../handlers/specialty-registration-flow.handler';
 import { ServiceRequestRegistrationFlowHandler } from '../handlers/service-request-registration-flow.handler';
 import { ServiceRequestViewFlowHandler } from '../handlers/service-request-view-flow.handler';
+import { AvailableServiceRequestsFlowHandler } from '../handlers/available-service-requests-flow.handler';
+import { AcceptedServiceRequestsFlowHandler } from '../handlers/accepted-service-requests-flow.handler';
 import { FallbackMessageHandler } from '../handlers/fallback-message.handler';
 
 /**
@@ -34,11 +38,15 @@ export class MessageRouter {
     private readonly initiateSpecialtyHandler: InitiateSpecialtyHandler,
     private readonly initiateServiceRequestHandler: InitiateServiceRequestHandler,
     private readonly viewServiceRequestsHandler: ViewServiceRequestsHandler,
+    private readonly viewAvailableServiceRequestsHandler: ViewAvailableServiceRequestsHandler,
+    private readonly viewAcceptedServiceRequestsHandler: ViewAcceptedServiceRequestsHandler,
     // Flow Handlers
     private readonly userRegistrationHandler: UserRegistrationFlowHandler,
     private readonly specialtyRegistrationHandler: SpecialtyRegistrationFlowHandler,
     private readonly serviceRequestRegistrationHandler: ServiceRequestRegistrationFlowHandler,
     private readonly serviceRequestViewFlowHandler: ServiceRequestViewFlowHandler,
+    private readonly availableServiceRequestsFlowHandler: AvailableServiceRequestsFlowHandler,
+    private readonly acceptedServiceRequestsFlowHandler: AcceptedServiceRequestsFlowHandler,
     // Fallback
     private readonly fallbackHandler: FallbackMessageHandler,
   ) {
@@ -50,12 +58,16 @@ export class MessageRouter {
       this.initiateSpecialtyHandler,
       this.initiateServiceRequestHandler,
       this.viewServiceRequestsHandler,
+      this.viewAvailableServiceRequestsHandler,
+      this.viewAcceptedServiceRequestsHandler,
       
       // Fluxos ativos (verificam estado)
       this.userRegistrationHandler,
       this.specialtyRegistrationHandler,
       this.serviceRequestRegistrationHandler,
       this.serviceRequestViewFlowHandler,
+      this.availableServiceRequestsFlowHandler,
+      this.acceptedServiceRequestsFlowHandler,
       
       // Welcome (saudações genéricas)
       this.welcomeHandler,

@@ -14,6 +14,12 @@ export class AnalyticsListener {
 
   @OnEvent('user.registered')
   async handleUserRegistered(event: UserRegisteredEvent): Promise<void> {
+    // Validar se o evento tem os dados necessários
+    if (!event.userName || !event.userType) {
+      this.logger.warn('[ANALYTICS] Skipping user.registered event with incomplete data');
+      return;
+    }
+    
     this.logger.log(`[ANALYTICS] User registered: ${event.userName} (${event.userType})`);
     
     // await this.analyticsService.track('User Signup', {
@@ -27,6 +33,12 @@ export class AnalyticsListener {
 
   @OnEvent('specialty.added')
   async handleSpecialtyAdded(event: SpecialtyAddedEvent): Promise<void> {
+    // Validar se o evento tem os dados necessários
+    if (!event.specialtyName || !event.userId) {
+      this.logger.warn('[ANALYTICS] Skipping specialty.added event with incomplete data');
+      return;
+    }
+    
     this.logger.log(
       `[ANALYTICS] Specialty added: ${event.specialtyName} by user ${event.userId}`
     );
@@ -42,6 +54,12 @@ export class AnalyticsListener {
 
   @OnEvent('conversation.completed')
   async handleConversationCompleted(event: ConversationCompletedEvent): Promise<void> {
+    // Validar se o evento tem os dados necessários
+    if (!event.conversationType || !event.outcome) {
+      this.logger.warn('[ANALYTICS] Skipping conversation.completed event with incomplete data');
+      return;
+    }
+    
     this.logger.log(
       `[ANALYTICS] Conversation completed: ${event.conversationType} (${event.outcome}) - Duration: ${event.durationMs}ms`
     );
