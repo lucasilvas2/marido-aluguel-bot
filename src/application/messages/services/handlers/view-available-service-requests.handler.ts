@@ -131,7 +131,6 @@ export class ViewAvailableServiceRequestsHandler implements ICommandHandler {
 
       this.logger.debug(`Found ${pendingRequests.length} pending service requests`);
 
-      // Enriquecer dados
       const displayRequests: AvailableServiceRequestDTO[] = await Promise.all(
         pendingRequests.map(async (sr) => {
           const specialty = await this.specialtiesService.getById(sr.getSpecialtyId());

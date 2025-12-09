@@ -18,6 +18,7 @@ import { ServiceRequestRegistrationFlowHandler } from '../handlers/service-reque
 import { ServiceRequestViewFlowHandler } from '../handlers/service-request-view-flow.handler';
 import { AvailableServiceRequestsFlowHandler } from '../handlers/available-service-requests-flow.handler';
 import { AcceptedServiceRequestsFlowHandler } from '../handlers/accepted-service-requests-flow.handler';
+import { ClientProposalViewFlowHandler } from '../handlers/client-proposal-view-flow.handler';
 import { FallbackMessageHandler } from '../handlers/fallback-message.handler';
 
 /**
@@ -45,6 +46,7 @@ export class MessageRouter {
     private readonly specialtyRegistrationHandler: SpecialtyRegistrationFlowHandler,
     private readonly serviceRequestRegistrationHandler: ServiceRequestRegistrationFlowHandler,
     private readonly serviceRequestViewFlowHandler: ServiceRequestViewFlowHandler,
+    private readonly clientProposalViewFlowHandler: ClientProposalViewFlowHandler,
     private readonly availableServiceRequestsFlowHandler: AvailableServiceRequestsFlowHandler,
     private readonly acceptedServiceRequestsFlowHandler: AcceptedServiceRequestsFlowHandler,
     // Fallback
@@ -66,6 +68,7 @@ export class MessageRouter {
       this.specialtyRegistrationHandler,
       this.serviceRequestRegistrationHandler,
       this.serviceRequestViewFlowHandler,
+      this.clientProposalViewFlowHandler,
       this.availableServiceRequestsFlowHandler,
       this.acceptedServiceRequestsFlowHandler,
       

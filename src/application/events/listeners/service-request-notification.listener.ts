@@ -211,6 +211,10 @@ export class ServiceRequestNotificationListener {
   /**
    * Notifica o profissional quando sua proposta é aceita pelo cliente
    */
+  /**
+   * Notifica o profissional quando sua proposta é aceita pelo cliente
+   * E notifica o cliente com os dados do profissional escolhido
+   */
   @OnEvent('service-request-proposal.accepted')
   async handleProposalAccepted(event: ServiceRequestProposalAcceptedEvent): Promise<void> {
     this.logger.log(
@@ -226,7 +230,7 @@ export class ServiceRequestNotificationListener {
         return;
       }
 
-      const message = 
+      const professionalMessage = 
         `🎉 *Parabéns! Você foi selecionado!*\n\n` +
         `O cliente *${client.getName()}* escolheu você para realizar o serviço.\n\n` +
         `📱 *Contato do Cliente:*\n` +
@@ -234,17 +238,34 @@ export class ServiceRequestNotificationListener {
         `Telefone: ${client.getWhatsappNumber()}\n\n` +
         `Entre em contato para agendar o serviço!\n\n` +
         `Digite *3* para ver seus serviços aceitos.\n` +
-        `Digite *${0}* para voltar ao menu.`;
+        `Digite *0* para voltar ao menu.`;
 
       await this.whatsappService.sendMessage(
         `${professional.getWhatsappNumber()}@c.us`,
-        message
+        professionalMessage
       );
 
       this.logger.log(`Professional ${event.professionalId} notified about accepted proposal ${event.proposalId}`);
+
+      const clientMessage = 
+        `✅ *Profissional Selecionado!*\n\n` +
+        `Você selecionou o profissional *${professional.getName()}* para realizar seu serviço.\n\n` +
+        `📱 *Contato do Profissional:*\n` +
+        `Nome: ${professional.getName()}\n` +
+        `Telefone: ${professional.getWhatsappNumber()}\n\n` +
+        `O profissional entrará em contato em breve para agendar o serviço.\n\n` +
+        `Digite *2* para ver seus pedidos.\n` +
+        `Digite *0* para voltar ao menu.`;
+
+      await this.whatsappService.sendMessage(
+        `${client.getWhatsappNumber()}@c.us`,
+        clientMessage
+      );
+
+      this.logger.log(`Client ${event.clientId} notified about accepted proposal ${event.proposalId} with professional contact`);
     } catch (error) {
       this.logger.error(
-        `Error notifying professional about accepted proposal: ${error.message}`,
+        `Error notifying about accepted proposal: ${error.message}`,
         error.stack
       );
     }

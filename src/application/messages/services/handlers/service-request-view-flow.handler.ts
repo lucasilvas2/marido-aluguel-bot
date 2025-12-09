@@ -5,6 +5,9 @@ import { ConversationStateDTO } from '../../dtos/conversation-state.dto';
 import { User } from 'src/domain/users/entities/user';
 import { ServiceRequestViewMessageFormatter, ServiceRequestDisplayDTO } from '../formatters/service-request-view-message.formatter';
 import { ServiceRequestAppServiceInterface } from 'src/application/service-request/interfaces/service-request.app.service.interfaces';
+import { ServiceRequestProposalAppServiceInterface } from 'src/application/service-request/interfaces/service-request-proposal.app.service.interface';
+import { UsersServiceInterface } from 'src/domain/users/services/users.service.interface';
+import { ClientProposalMessageFormatter, ProfessionalProposalDTO } from '../formatters/client-proposal-message.formatter';
 import { WhatsappWebService } from 'src/infraestructure/whatsappWeb/whatsappWeb.service';
 import { EventEmitterService } from 'src/application/events/event-emitter.service';
 import { ServiceRequestCancelledEvent } from 'src/application/events/events/service-request/service-request-cancelled.event';
@@ -30,7 +33,10 @@ export class ServiceRequestViewFlowHandler implements IConversationFlowHandler {
 
   constructor(
     private readonly formatter: ServiceRequestViewMessageFormatter,
+    private readonly proposalFormatter: ClientProposalMessageFormatter,
     private readonly serviceRequestService: ServiceRequestAppServiceInterface,
+    private readonly proposalService: ServiceRequestProposalAppServiceInterface,
+    private readonly usersService: UsersServiceInterface,
     private readonly whatsappService: WhatsappWebService,
     private readonly eventEmitter: EventEmitterService,
   ) {}
@@ -205,13 +211,49 @@ export class ServiceRequestViewFlowHandler implements IConversationFlowHandler {
         proposalsMessage,
       );
 
-      // Mudar estado para viewing_proposals
+      // Carregar propostas pendentes
+      const proposals = await this.proposalService.findPendingByServiceRequestId(selectedRequest.id);
+
+      const proposalDTOs: ProfessionalProposalDTO[] = await Promise.all(
+        proposals.map(async (proposal) => {
+          const professional = await this.usersService.findById(proposal.getProfessionalId());
+          const stats = await this.proposalService.getProfessionalStats(proposal.getProfessionalId());
+
+          return {
+            proposalId: proposal.getId(),
+            professionalId: proposal.getProfessionalId(),
+            professionalName: professional?.getName() || 'Profissional',
+            professionalPhone: professional?.getWhatsappNumber() || '',
+            specialtyName: selectedRequest.specialtyName,
+            experienceYears: stats.experienceYears,
+            pricePerHour: stats.pricePerHour,
+            isCertified: stats.isCertified,
+            completedServicesCount: stats.completedServicesCount,
+            proposedAt: proposal.getProposedAt(),
+          };
+        }),
+      );
+
+      // Formatar e enviar lista de propostas
+      const proposalsListMessage = this.proposalFormatter.formatProposalsList(
+        selectedRequest.id,
+        selectedRequest.specialtyName,
+        proposalDTOs,
+      );
+
+      await this.whatsappService.sendMessage(
+        `${message.phoneNumber}@c.us`,
+        proposalsListMessage,
+      );
+
+      // Mudar estado para viewing_proposals com propostas já carregadas
       return {
         userId: message.phoneNumber,
         state: 'viewing_proposals',
         data: {
           serviceRequestId: selectedRequest.id,
           specialtyName: selectedRequest.specialtyName,
+          proposals: proposalDTOs,
         },
       };
     }
